@@ -11,7 +11,18 @@ def procesar_archivo(archivo_entrada, archivo_salida):
     ex = pd.read_excel(archivo_entrada, engine="openpyxl", header=1)
 
     for _, fila in ex.iterrows():
-        if pd.isna(fila["Especialidad_Remitente"]) or str(fila["Especialidad_Remitente"]).strip().upper().startswith("PYP"):
+
+        IsAnestecia = str(fila["Descripcion_Prestacion"]).strip().upper().__contains__("ANESTESIA")
+        IsSedacion = str(fila["Descripcion_Prestacion"]).strip().upper().__contains__("SEDACIÓN")
+        IsContraste = str(fila["Descripcion_Prestacion"]).strip().upper().__contains__("CONTRASTE")
+        IsComparativo = str(fila["Descripcion_Prestacion"]).strip().upper().__contains__("COMPARATIVO")
+        IsBilateral = str(fila["Descripcion_Prestacion"]).strip().upper().__contains__("BILATERAL")
+
+
+        if str(fila["Especialidad_Remitente"]).strip().upper().startswith("PYP"):
+            continue
+
+        if str(fila["Descripcion_Prestacion"]).strip().upper().__contains__("GENERAL"):
             continue
 
         datos.append({
@@ -34,11 +45,11 @@ def procesar_archivo(archivo_entrada, archivo_salida):
             "CANTIDAD": fila["Cantidad"],
             "JUSTIFICACION_CLINICA": fila["Justificacion_Clinica"],
             "EDAD_GESTACIONAL_SEMANAS": fila["Edad_Gestacional"],
-            "ANESTESIA": fila["Anestesia_A"],
-            "SEDACION": fila["Sedación_S"],
-            "CONTRASTE": fila["Contraste_T"],
-            "COMPARATIVO": fila["Comparativo_C"],
-            "BILATERAL": fila["Bilateral_B"],
+            "ANESTESIA": "x" if IsAnestecia else "",
+            "SEDACION": "x" if IsSedacion else "",
+            "CONTRASTE": "x" if IsContraste else "",
+            "COMPARATIVO": "x" if IsComparativo else "",
+            "BILATERAL": "x" if IsBilateral else "",
             "NOAPLICA": "X",
         })
 
