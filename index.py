@@ -1,14 +1,37 @@
 import pandas as pd
 import datetime as date
+import re
 
 NIT = "812000344"
 CSBH = "11033"
 NPR = "ESE HOSPITAL LOCAL DE MONTELIBANO"
 
+def validar_telefono(telefono):
+
+    if pd.isna(telefono):
+        return ""
+    
+    telefono_str = str(telefono)
+    digitos = re.sub(r'\D', '', telefono_str)
+    
+    if not digitos:
+        return ""
+    
+    if len(digitos) > 10:
+        digitos = digitos[:10]
+    
+    if len(digitos) < 10:
+        digitos = digitos.zfill(10)
+    
+    return digitos
+
 datos = []
 ex = pd.read_excel("base5.xlsx", engine="openpyxl", header=1)
 
 for _, fila in ex.iterrows():
+
+    if pd.isna(fila["Especialidad_Remitente"]) or str(fila["Especialidad_Remitente"]).strip().upper().startswith("PYP"):
+        continue
 
     datos.append({
         "FECHA_ENVIO": date.datetime.now(),
@@ -18,8 +41,8 @@ for _, fila in ex.iterrows():
         "TIPO_IDENTIFICACION_DEL_AFILIADO": fila["Tipo_Identificación_del_Afiliado"],
         "NUMERO_IDENTIFICACION_DEL_AFILIADO": fila["Numero_de_Identificación_del_Afiliado"],
         "NOMBRE_PACIENTE": fila["Nombre_Paciente"],
-        "TELEFONO_CELULAR_1": fila["Telefono_Celular_1"],
-        "TELEFONO_CELULAR_2": fila["Telefono_Celular_2"],
+        "TELEFONO_CELULAR_1": validar_telefono(fila["Telefono_Celular_1"]),
+        "TELEFONO_CELULAR_2": validar_telefono(fila["Telefono_Celular_2"]),
         "FECHA_ATENCION": fila["Fecha_Atencion"],
         "CIE10": fila["cie10"],
         "NOMBRE_MEDICO": fila["Nombre_Medico"],
