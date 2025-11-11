@@ -14,7 +14,4 @@ def validar_telefono(telefono):
     if len(digitos) > 10:
         digitos = digitos[:10]
     
-    if len(digitos) < 10:
-        digitos = digitos.zfill(10)
-    
     return digitos

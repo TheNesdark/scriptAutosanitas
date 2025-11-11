@@ -1,9 +1,13 @@
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 from src.procesador import procesar_archivo
+import datetime as date
 
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
+
+fecha = (date.datetime.now() - date.timedelta(days=1)).strftime("%d%m%Y")
+nombre_archivo = f"Planilla_MNP_Mitrol_ESE_Hospital_Local_Montelibano_{fecha}.xlsx"
 
 def seleccionar_archivo_entrada():
     archivo = filedialog.askopenfilename(filetypes=[("Excel", "*.xlsx")])
@@ -38,7 +42,7 @@ def iniciar_gui():
     ventana.resizable(False, False)
 
     entrada_var = ctk.StringVar()
-    salida_var = ctk.StringVar(value="NV.xlsx")
+    salida_var = ctk.StringVar(value=nombre_archivo)
 
     titulo = ctk.CTkLabel(ventana, text="Procesador Autosanitas", font=("Segoe UI", 24, "bold"))
     titulo.pack(pady=30)
